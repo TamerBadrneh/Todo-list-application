@@ -7,13 +7,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import LinearProgressWithLabel from "./LinearProgressBar";
-import fileDownload from "js-file-download";
 import TablePagination from "@mui/material/TablePagination";
 import TableRowInstance from "./TableRowInstance";
 import { Snackbar, TableSortLabel } from "@mui/material";
 import AddOrUpdateDialog from "./AddOrUpdateDialog";
 import Controls from "./Controls";
 import NoTaskAvailable from "./NoTaskAvailable";
+import exportFromJSON from "export-from-json";
 
 export default function TodoList() {
   // States
@@ -70,7 +70,7 @@ export default function TodoList() {
         if (!todo.isCompleted)
           setOpenSnackbar({
             open: true,
-            message: `TODO: ${todo.name}, is completed...`,
+            message: `Task: ${todo.name}, is completed...`,
           });
 
         return { ...todo, isCompleted: !todo.isCompleted };
@@ -97,7 +97,7 @@ export default function TodoList() {
     setTodos(newTodoList);
     setOpenSnackbar({
       open: true,
-      message: `TODO: ${todoName}, has successfully deleted...`,
+      message: `Task: ${todoName}, has successfully deleted...`,
     });
     localStorage.setItem("todos", JSON.stringify(newTodoList));
   }
@@ -108,9 +108,8 @@ export default function TodoList() {
   }
 
   // Exporting Utils:
-  function exportAsJSON() {
-    const jsonString = JSON.stringify(todos, null, 2);
-    fileDownload(jsonString, "tasks.json");
+  function exportAsExcel() {
+    exportFromJSON({ data: todos, fileName: "Tasks", exportType: "xls" });
   }
 
   // Pagination:
@@ -193,7 +192,7 @@ export default function TodoList() {
       <Controls
         noOfTodos={todos.length}
         onAddTaskIconClick={() => setOpenAddTaskDialog(true)}
-        onExportAsJSONClick={exportAsJSON}
+        onExportAsExcelClick={exportAsExcel}
       />
 
       {todos.length > 0 ? (
@@ -219,8 +218,7 @@ export default function TodoList() {
                       </TableSortLabel>
                     </TableCell>
                   ))}
-                  <TableCell align="center">Edit</TableCell>
-                  <TableCell align="center">Delete</TableCell>
+                  <TableCell align="center">Actions</TableCell>
                 </TableRow>
               </TableHead>
               {/* == Table Headers == */}

@@ -4,7 +4,7 @@ import AddTaskIcon from "@mui/icons-material/AddTask";
 
 export default function Controls({
   onAddTaskIconClick,
-  onExportAsJSONClick,
+  onExportAsExcelClick,
   noOfTodos,
 }) {
   return (
@@ -20,7 +20,6 @@ export default function Controls({
         variant="contained"
         aria-label="Add Task"
         onClick={onAddTaskIconClick}
-        title="Add new task"
         sx={{
           backgroundColor: "#328E6E",
           textTransform: "none",
@@ -45,8 +44,7 @@ export default function Controls({
           backgroundColor: "#3D90D7",
           textTransform: "none",
         }}
-        onClick={onExportAsJSONClick}
-        title="export as json"
+        onClick={onExportAsExcelClick}
       >
         <DownloadIcon
           style={{

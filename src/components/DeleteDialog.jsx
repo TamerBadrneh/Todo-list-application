@@ -34,8 +34,9 @@ export default function DeleteDialog({
             onClick={() => handleDeleteConfirmation(false)}
             variant="outlined"
             sx={{
-              color: "black",
-              borderColor: "gray",
+              textTransform: "none",
+              color: "#000",
+              borderColor: "#DBDBDB",
             }}
           >
             Cancel
@@ -46,8 +47,9 @@ export default function DeleteDialog({
             }}
             variant="contained"
             sx={{
+              textTransform: "none",
               color: "white",
-              backgroundColor: "red",
+              backgroundColor: "#F7374F",
             }}
           >
             Delete

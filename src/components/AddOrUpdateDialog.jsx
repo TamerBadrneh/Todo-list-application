@@ -64,7 +64,7 @@ export default function AddOrUpdateDialog({
         }}
       >
         <DialogTitle>
-          {todo !== undefined ? "Update Todo" : "Add New Todo"}
+          {todo !== undefined ? "Update Task" : "Add New Task"}
         </DialogTitle>
         <DialogContent>
           <TextField
@@ -92,8 +92,11 @@ export default function AddOrUpdateDialog({
         </DialogContent>
         <DialogActions>
           <Button
+            variant="outlined"
             sx={{
-              color: "black",
+              textTransform: "none",
+              color: "#000",
+              borderColor: "#DBDBDB",
             }}
             onClick={reset}
           >
@@ -103,8 +106,9 @@ export default function AddOrUpdateDialog({
             variant="contained"
             disabled={todoData.name === "" || todoData.description === ""}
             sx={{
+              textTransform: "none",
               color: "white",
-              backgroundColor: "green",
+              backgroundColor: "#328E6E",
             }}
             type="submit"
           >
