@@ -11,21 +11,7 @@ export default function NoTaskAvailable() {
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <Box
-        sx={{
-          width: { xs: "35px", md: "65px" },
-          height: { xs: "35px", md: "65px" },
-        }}
-      >
-        <img
-          style={{
-            maxWidth: "100%",
-            height: "100%",
-          }}
-          src="../assets/icons/no-task.png"
-          alt="No task available..."
-        />
-      </Box>
+     
       <Typography
         fontFamily={"Poppins"}
         variant="subtitle1"
