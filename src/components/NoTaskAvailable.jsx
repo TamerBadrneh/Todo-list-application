@@ -22,7 +22,7 @@ export default function NoTaskAvailable() {
             maxWidth: "100%",
             height: "100%",
           }}
-          src="/src/assets/icons/no-task.png"
+          src="../assets/icons/no-task.png"
           alt="No task available..."
         />
       </Box>
