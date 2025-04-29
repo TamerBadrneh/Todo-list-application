@@ -137,6 +137,10 @@ export default function TodoList() {
     setPage(0);
   }
 
+  function customLabelDisplayedRows({ from, to, count }) {
+    return `${from} - ${to} out of ${count}`;
+  }
+
   // Sorting:
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
@@ -151,11 +155,6 @@ export default function TodoList() {
       id: "name",
       numeric: false,
       label: "Task Name",
-    },
-    {
-      id: "description",
-      numeric: false,
-      label: "Task Description",
     },
     {
       id: "isCompleted",
@@ -204,6 +203,7 @@ export default function TodoList() {
               {/* == Table Headers == */}
               <TableHead>
                 <TableRow>
+                  <TableCell align="center">Details</TableCell>
                   {headCells.map((headCell) => (
                     <TableCell
                       key={headCell.id}
@@ -248,6 +248,7 @@ export default function TodoList() {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
+            labelDisplayedRows={customLabelDisplayedRows}
           />
           <section style={{ marginBlock: "15px" }}>
             <LinearProgressWithLabel

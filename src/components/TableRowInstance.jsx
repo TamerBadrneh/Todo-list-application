@@ -5,6 +5,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import DeleteDialog from "./DeleteDialog";
 import { useState } from "react";
 import AddOrUpdateDialog from "./AddOrUpdateDialog";
+import { Collapse, Box } from "@mui/material";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 export default function TableRowInstance({
   todo,
@@ -15,7 +18,7 @@ export default function TableRowInstance({
   // State:
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
-
+  const [openCollapse, setOpenCollapse] = useState(false);
   // handlers:
   function closeDeleteDialog() {
     setOpenDeleteDialog(false);
@@ -34,9 +37,17 @@ export default function TableRowInstance({
     <>
       <TableRow>
         {/* == Table Columns == */}
-        <TableCell align="center">{todo.id}</TableCell>
+        <TableCell align="center">
+          <IconButton
+            aria-label="expand row"
+            size="small"
+            onClick={() => setOpenCollapse(!openCollapse)}
+          >
+            {openCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell align="center">{`${todo.id}`.substring(2)}</TableCell>
         <TableCell align="center">{todo.name}</TableCell>
-        <TableCell align="center">{todo.description}</TableCell>
         <TableCell align="center">
           <IconButton
             onClick={() => {
@@ -96,6 +107,15 @@ export default function TableRowInstance({
           handleSubmission={onTodoUpdating}
         />
         {/* == Update Task Dialog == */}
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={openCollapse} timeout="auto" unmountOnExit>
+            <Box margin={1}>
+              <p>Task Details: {todo.description}</p>
+            </Box>
+          </Collapse>
+        </TableCell>
       </TableRow>
     </>
   );
