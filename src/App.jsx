@@ -1,25 +1,14 @@
 import { Container } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import TodoList from "./components/TodoList";
+import Header from "./components/Header";
 
 export default function App() {
   return (
     <>
       <Container maxWidth="md">
         {/* == Heading == */}
-        <Typography
-          sx={{
-            marginTop: "50px",
-          }}
-          variant="h2"
-          component={"h1"}
-          gutterBottom
-          fontWeight="bold"
-          fontStyle={"italic"}
-          textAlign={"center"}
-        >
-          My Tasks
-        </Typography>
+        <Header />
         {/* == Heading == */}
 
         {/* == Todo List == */}

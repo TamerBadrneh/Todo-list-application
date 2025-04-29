@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import AddOrUpdateDialog from "./AddOrUpdateDialog";
 import Controls from "./Controls";
+import NoTaskAvailable from "./NoTaskAvailable";
 
 export default function TodoList() {
   // States
@@ -223,18 +224,7 @@ export default function TodoList() {
           </section>
         </>
       ) : (
-        <Typography
-          sx={{
-            marginTop: "50px",
-          }}
-          variant="subtitle1"
-          component={"h2"}
-          gutterBottom
-          fontWeight={"bold"}
-          textAlign={"center"}
-        >
-          No Tasks Available
-        </Typography>
+        <NoTaskAvailable />
       )}
 
       {/* Controls */}
