@@ -8,16 +8,9 @@ import Paper from "@mui/material/Paper";
 import { useState } from "react";
 import LinearProgressWithLabel from "./LinearProgressBar";
 import fileDownload from "js-file-download";
-
+import TablePagination from "@mui/material/TablePagination";
 import TableRowInstance from "./TableRowInstance";
-import {
-  Button,
-  IconButton,
-  Snackbar,
-  Stack,
-  TableSortLabel,
-  Typography,
-} from "@mui/material";
+import { Snackbar, TableSortLabel } from "@mui/material";
 import AddOrUpdateDialog from "./AddOrUpdateDialog";
 import Controls from "./Controls";
 import NoTaskAvailable from "./NoTaskAvailable";
@@ -120,6 +113,30 @@ export default function TodoList() {
     fileDownload(jsonString, "tasks.json");
   }
 
+  // Pagination:
+  // Step 1: Added states for changing the current page and the rows per page "if user selects"
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // Slice data based on the current page selected and the rows per page
+  // if we have 7 todos and we have selected the 2nd page
+  // and each page must contain only 5 then...
+  // 1 * 5 => starts from index 5
+  // 1 * 5 + 5 => end in 11 (not included as index) "not exist so we end up in the last 2 elements instead"
+  const paginatedTodos = todos.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
+  function handleChangePage(event, newPage) {
+    setPage(newPage);
+  }
+
+  function handleChangeRowsPerPage(event) {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  }
+
   // Sorting:
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
@@ -173,6 +190,13 @@ export default function TodoList() {
   // READ || Render
   return (
     <>
+      {/* Controls */}
+      <Controls
+        noOfTodos={todos.length}
+        onAddTaskIconClick={() => setOpenAddTaskDialog(true)}
+        onExportAsJSONClick={exportAsJSON}
+      />
+
       {todos.length > 0 ? (
         <>
           <TableContainer component={Paper}>
@@ -203,7 +227,7 @@ export default function TodoList() {
 
               <TableBody>
                 {/* == Table Rows == */}
-                {todos.map((todo) => (
+                {paginatedTodos.map((todo) => (
                   <TableRowInstance
                     key={todo.id}
                     todo={todo}
@@ -216,6 +240,15 @@ export default function TodoList() {
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5]}
+            component="div"
+            count={todos.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <section style={{ marginBlock: "15px" }}>
             <LinearProgressWithLabel
               value={todos.filter((todo) => todo.isCompleted).length}
@@ -226,12 +259,6 @@ export default function TodoList() {
       ) : (
         <NoTaskAvailable />
       )}
-
-      {/* Controls */}
-      <Controls
-        onAddTaskIconClick={() => setOpenAddTaskDialog(true)}
-        onExportAsJSONClick={exportAsJSON}
-      />
 
       {/* == Add Task Dialog == */}
       <AddOrUpdateDialog

@@ -1,51 +1,62 @@
-import { IconButton, Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import AddTaskIcon from "@mui/icons-material/AddTask";
 
-export default function Controls({ onAddTaskIconClick, onExportAsJSONClick }) {
+export default function Controls({
+  onAddTaskIconClick,
+  onExportAsJSONClick,
+  noOfTodos,
+}) {
   return (
     <Stack
       direction={"row"}
-      sx={{
-        marginBlock: "30px",
-      }}
+      marginBottom={"50px"}
       gap={"10px"}
       justifyContent={"center"}
       alignItems={"center"}
     >
       {/* Add Task */}
-      <IconButton
+      <Button
+        variant="contained"
         aria-label="Add Task"
-        style={{
-          color: "green",
-        }}
         onClick={onAddTaskIconClick}
         title="Add new task"
+        sx={{
+          backgroundColor: "#328E6E",
+          textTransform: "none",
+        }}
       >
         <AddTaskIcon
           style={{
-            width: "30px",
-            height: "30px",
+            width: "20px",
+            height: "20px",
+            marginRight: "5px",
           }}
         />
-      </IconButton>
+        {" Add New Task"}
+      </Button>
 
-      {/* Save as JSON */}
-      <IconButton
-        aria-label="download as json"
+      {/* Save as Excel */}
+      <Button
+        disabled={noOfTodos === 0}
+        variant="contained"
+        aria-label="download as excel"
         style={{
-          color: "blue",
+          backgroundColor: "#3D90D7",
+          textTransform: "none",
         }}
         onClick={onExportAsJSONClick}
         title="export as json"
       >
         <DownloadIcon
           style={{
-            width: "30px",
-            height: "30px",
+            width: "20px",
+            height: "20px",
+            marginRight: "5px",
           }}
         />
-      </IconButton>
+        {" Export Excel"}
+      </Button>
     </Stack>
   );
 }
