@@ -41,7 +41,7 @@ export default function Controls({
         variant="contained"
         aria-label="download as excel"
         style={{
-          backgroundColor: "#3D90D7",
+          backgroundColor: noOfTodos === 0 ? "#D9D9D9" : "#3D90D7",
           textTransform: "none",
         }}
         onClick={onExportAsExcelClick}

@@ -5,13 +5,11 @@ export default function NoTaskAvailable() {
     <Stack
       sx={{
         height: "50dvh",
-        gap: { xs: "10px", md: "20px" },
       }}
       direction={"row"}
       justifyContent={"center"}
       alignItems={"center"}
     >
-     
       <Typography
         fontFamily={"Poppins"}
         variant="subtitle1"
