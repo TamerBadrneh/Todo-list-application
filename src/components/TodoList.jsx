@@ -6,7 +6,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
-import LinearProgressWithLabel from "./LinearProgressBar";
 import TablePagination from "@mui/material/TablePagination";
 import TableRowInstance from "./TableRowInstance";
 import { Snackbar, TableSortLabel } from "@mui/material";
@@ -14,6 +13,7 @@ import AddOrUpdateDialog from "./AddOrUpdateDialog";
 import Controls from "./Controls";
 import NoTaskAvailable from "./NoTaskAvailable";
 import exportFromJSON from "export-from-json";
+import PieChartSummary from "./PieChartSummary";
 
 export default function TodoList() {
   // States
@@ -197,6 +197,10 @@ export default function TodoList() {
 
       {todos.length > 0 ? (
         <>
+          <PieChartSummary
+            completed={todos.filter((t) => t.isCompleted).length}
+            inCompleted={todos.filter((t) => !t.isCompleted).length}
+          />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 550 }} aria-label="todo list table">
               {/* == Table Headers == */}
@@ -248,12 +252,6 @@ export default function TodoList() {
             onRowsPerPageChange={handleChangeRowsPerPage}
             labelDisplayedRows={customLabelDisplayedRows}
           />
-          <section style={{ marginBlock: "15px" }}>
-            <LinearProgressWithLabel
-              value={todos.filter((todo) => todo.isCompleted).length}
-              todos={todos.length}
-            />
-          </section>
         </>
       ) : (
         <NoTaskAvailable />
