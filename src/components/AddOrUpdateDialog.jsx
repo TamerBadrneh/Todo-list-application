@@ -46,7 +46,6 @@ export default function AddOrUpdateDialog({
 
   return (
     <>
-      {/* Add Task Dialog */}
       <Dialog
         open={openDialog}
         onClose={closeDialog}
@@ -116,9 +115,7 @@ export default function AddOrUpdateDialog({
           </Button>
         </DialogActions>
       </Dialog>
-      {/* Add Task Dialog */}
 
-      {/* == Add or Update Task Snackbar == */}
       <Snackbar
         open={showAddOrUpdateSnackbar}
         autoHideDuration={1500}
@@ -129,7 +126,6 @@ export default function AddOrUpdateDialog({
             : "Task Updated Successfully"
         }
       />
-      {/* == Add or Update Task Snackbar == */}
     </>
   );
 }

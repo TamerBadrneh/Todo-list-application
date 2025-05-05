@@ -15,7 +15,6 @@ export default function Controls({
       justifyContent={"center"}
       alignItems={"center"}
     >
-      {/* Add Task */}
       <Button
         variant="contained"
         aria-label="Add Task"
@@ -35,7 +34,6 @@ export default function Controls({
         {" Add New Task"}
       </Button>
 
-      {/* Save as Excel */}
       <Button
         disabled={noOfTodos === 0}
         variant="contained"

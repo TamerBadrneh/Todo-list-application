@@ -28,24 +28,16 @@ export default function TableRowInstance({
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openCollapse, setOpenCollapse] = useState(false);
   const [anchor, setAnchor] = useState(null);
+
   // handlers:
-  function closeDeleteDialog() {
-    setOpenDeleteDialog(false);
-  }
-
-  function closeUpdateDialog() {
-    setOpenUpdateDialog(false);
-  }
-
   function handleDeleteConfirmation(confirmDeletion) {
     if (confirmDeletion) onTodoDeletion(todo.id);
-    closeDeleteDialog();
+    setOpenDeleteDialog(false);
   }
 
   return (
     <>
       <TableRow>
-        {/* == Table Columns == */}
         <TableCell align="center">
           <IconButton
             aria-label="expand row"
@@ -115,24 +107,19 @@ export default function TableRowInstance({
             </MenuItem>
           </Menu>
         </TableCell>
-        {/* == Table Columns == */}
 
-        {/* == Delete Task Dialog == */}
         <DeleteDialog
           taskName={todo.name}
           isOpened={openDeleteDialog}
           handleDeleteConfirmation={handleDeleteConfirmation}
         />
-        {/* == Delete Task Dialog == */}
 
-        {/* == Update Task Dialog == */}
         <AddOrUpdateDialog
           todo={todo}
           openDialog={openUpdateDialog}
-          closeDialog={closeUpdateDialog}
+          closeDialog={() => setOpenUpdateDialog(false)}
           handleSubmission={onTodoUpdating}
         />
-        {/* == Update Task Dialog == */}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
