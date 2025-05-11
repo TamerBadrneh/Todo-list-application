@@ -3,9 +3,8 @@ import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import Paper from "@mui/material/Paper";
 import { useState } from "react";
-import TablePagination from "@mui/material/TablePagination";
 import TableRowInstance from "./TableRowInstance";
-import { Snackbar } from "@mui/material";
+import { Button, Snackbar, Stack, TextField, Tooltip } from "@mui/material";
 import AddOrUpdateDialog from "./AddOrUpdateDialog";
 import Controls from "./Controls";
 import NoTaskAvailable from "./NoTaskAvailable";
@@ -13,6 +12,10 @@ import exportFromJSON from "export-from-json";
 import PieChartSummary from "./PieChartSummary";
 import TableHeader from "./TableHeader";
 import TablePaginationFooter from "./TablePaginationFooter";
+import DeleteDialog from "./DeleteDialog";
+import FilterListIcon from "@mui/icons-material/FilterList";
+
+// TODO: is Clean => True
 
 export default function TodoList() {
   // States:
@@ -21,12 +24,20 @@ export default function TodoList() {
     JSON.parse(localStorage.getItem("todos")) || []
   );
 
+  // The child "Table Row instance" will send the desired todo for them...
+  const [editedTodo, setEditedTodo] = useState(null);
+  const [todoToDelete, setTodoToDelete] = useState(null);
+  const [searchedTodo, setSearchedTodo] = useState("");
+  const [completedTasksToggle, setCompletedTasksToggle] = useState(null);
+
   // 2. Dialogs and Snackbars
   const [openAddTaskDialog, setOpenAddTaskDialog] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     message: "",
   });
+  const [openUpdateTaskDialog, setOpenUpdateTaskDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   // 3. Pagination
   const [page, setPage] = useState(0);
@@ -35,6 +46,16 @@ export default function TodoList() {
   // 4. Sorting
   const [orderBy, setOrderBy] = useState("");
   const [order, setOrder] = useState("asc");
+
+  // filtered data:
+  let filteredTodos = todos.filter((t) => {
+    const matchesSearch =
+      t.id.toString().includes(searchedTodo.trim().toLowerCase()) ||
+      t.name.trim().toLowerCase().includes(searchedTodo.trim().toLowerCase());
+    const matchesCompletion =
+      completedTasksToggle === null || t.isCompleted === completedTasksToggle;
+    return matchesSearch && matchesCompletion;
+  });
 
   // CRUD:
   function handleAddingNewTodo(todo) {
@@ -67,7 +88,6 @@ export default function TodoList() {
     });
 
     setTodos(newTodoList);
-
     localStorage.setItem("todos", JSON.stringify(newTodoList));
   }
 
@@ -109,7 +129,7 @@ export default function TodoList() {
   }
 
   // Pagination:
-  const paginatedTodos = todos.slice(
+  const paginatedTodos = filteredTodos.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
@@ -141,7 +161,6 @@ export default function TodoList() {
   // READ || Render
   return (
     <>
-      {/* Controls */}
       <Controls
         noOfTodos={todos.length}
         onAddTaskIconClick={() => setOpenAddTaskDialog(true)}
@@ -156,6 +175,60 @@ export default function TodoList() {
             completed={todos.filter((t) => t.isCompleted).length}
             inCompleted={todos.filter((t) => !t.isCompleted).length}
           />
+
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            gap={"20px"}
+            sx={{
+              marginBlock: "15px",
+            }}
+          >
+            {/* We can extract this in another table for the sake of simplicity ! */}
+            <TextField
+              label="Enter Task Name or Id to Search"
+              type="search"
+              variant="standard"
+              value={searchedTodo}
+              onChange={(event) => {
+                setSearchedTodo(event.target.value);
+                filteredTodos = todos.filter(
+                  (t) =>
+                    t.id.toString().includes(searchedTodo.trim()) ||
+                    t.name
+                      .toString()
+                      .toLowerCase()
+                      .includes(searchedTodo.trim().toLowerCase())
+                );
+                setPage(0);
+              }}
+              sx={{
+                width: "80%",
+              }}
+            />
+
+            <Tooltip
+              title={
+                completedTasksToggle
+                  ? "Get Completed Tasks"
+                  : "Get Incompleted Tasks"
+              }
+            >
+              <Button
+                variant="contained"
+                sx={{
+                  width: "20%",
+                }}
+                onClick={() =>
+                  setCompletedTasksToggle((prevState) => !prevState)
+                }
+              >
+                <FilterListIcon sx={{ marginRight: "8px" }} />
+                {completedTasksToggle ? "Completed" : "Incompleted"}
+              </Button>
+            </Tooltip>
+          </Stack>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 550 }} aria-label="todo list table">
               <TableHeader
@@ -169,16 +242,23 @@ export default function TodoList() {
                   <TableRowInstance
                     key={todo.id}
                     todo={todo}
+                    onOpenUpdateDialog={() => {
+                      setEditedTodo(() => todo);
+                      setOpenUpdateTaskDialog(true);
+                    }}
                     onToggleCompletionClick={toggleTodoCompletion}
-                    onTodoDeletion={deleteTodo}
-                    onTodoUpdating={handleUpdatingTodo}
+                    onOpenDeleteDialog={() => {
+                      setTodoToDelete(todo);
+                      setOpenDeleteDialog(true);
+                    }}
                   />
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+
           <TablePaginationFooter
-            todos={todos}
+            todos={filteredTodos}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={(event, newPage) => setPage(newPage)}
@@ -196,6 +276,26 @@ export default function TodoList() {
         openDialog={openAddTaskDialog}
         handleSubmission={handleAddingNewTodo}
         closeDialog={() => setOpenAddTaskDialog(false)}
+      />
+
+      <AddOrUpdateDialog
+        openDialog={openUpdateTaskDialog}
+        handleSubmission={handleUpdatingTodo}
+        todo={editedTodo}
+        closeDialog={() => {
+          setOpenUpdateTaskDialog(false);
+          setEditedTodo(null);
+        }}
+      />
+
+      <DeleteDialog
+        taskName={todoToDelete?.name}
+        isOpened={openDeleteDialog}
+        handleDeleteConfirmation={(confirmDeletion) => {
+          if (confirmDeletion && todoToDelete) deleteTodo(todoToDelete.id);
+          setOpenDeleteDialog(false);
+          setTodoToDelete(null);
+        }}
       />
 
       <Snackbar

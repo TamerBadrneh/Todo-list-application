@@ -1,19 +1,21 @@
 import { Stack } from "@mui/material";
 import Chart from "react-apexcharts";
 
+// TODO: is Cleaned => True
+
 export default function PieChartSummary({ completed, inCompleted }) {
-  let totalTodos = completed + inCompleted;
+
   const CHART_OPTIONS = {
+    //  The data we will represent is the series...
     series: [
-      Math.round((completed / totalTodos) * 100),
-      Math.round((inCompleted / totalTodos) * 100),
+      Math.round((completed / (completed + inCompleted)) * 100),
+      Math.round((inCompleted / (completed + inCompleted)) * 100),
     ],
+
+    // Configurations...
     options: {
       chart: {
         type: "pie",
-        selection: {
-          enabled: false,
-        },
       },
       labels: ["Completed", "In-Completed"],
       legend: {

@@ -1,4 +1,6 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
+
+// TODO: is Cleaned => True
 
 export default function NoTaskAvailable() {
   return (

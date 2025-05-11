@@ -5,40 +5,77 @@ import {
   MenuItem,
   TableCell,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DeleteDialog from "./DeleteDialog";
 import { useState } from "react";
-import AddOrUpdateDialog from "./AddOrUpdateDialog";
 import { Collapse, Box } from "@mui/material";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import MenuIcon from "@mui/icons-material/Menu";
 
+// TODO: is Cleaned => True
+
 export default function TableRowInstance({
   todo,
   onToggleCompletionClick,
-  onTodoDeletion,
-  onTodoUpdating,
+  onOpenUpdateDialog,
+  onOpenDeleteDialog,
 }) {
   // State:
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openCollapse, setOpenCollapse] = useState(false);
   const [anchor, setAnchor] = useState(null);
 
-  // handlers:
-  function handleDeleteConfirmation(confirmDeletion) {
-    if (confirmDeletion) onTodoDeletion(todo.id);
-    setOpenDeleteDialog(false);
-  }
+  // menuItems:
+  let menuItems = [
+    // Update
+    {
+      id: 1,
+      onClickHandler: () => onOpenUpdateDialog(),
+      children: (
+        <>
+          <EditIcon
+            sx={{
+              width: "25px",
+              height: "25px",
+              color: "#3D90D7",
+              marginRight: "5px",
+            }}
+          />
+          Edit
+        </>
+      ),
+    },
+    // Delete
+    {
+      id: 2,
+      onClickHandler: () => onOpenDeleteDialog(),
+      children: (
+        <>
+          <DeleteIcon
+            sx={{
+              width: "25px",
+              height: "25px",
+              color: "#F7374F",
+              marginRight: "5px",
+            }}
+          />
+          Delete
+        </>
+      ),
+    },
+  ];
 
-  return (
-    <>
-      <TableRow>
-        <TableCell align="center">
+  // cells:
+  let cells = [
+    // Collapse Icon
+    {
+      id: 1,
+      align: "center",
+      children: (
+        <>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -46,80 +83,86 @@ export default function TableRowInstance({
           >
             {openCollapse ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
-        <TableCell align="center">{`${todo.id}`.substring(2)}</TableCell>
-        <TableCell align="center">{todo.name}</TableCell>
+        </>
+      ),
+    },
+    // Todo Id
+    {
+      id: 2,
+      align: "center",
+      children: <>{`${todo.id}`.substring(2)}</>,
+    },
+    // Name
+    {
+      id: 3,
+      align: "center",
+      children: <>{todo.name}</>,
+    },
+    // Completed
+    {
+      id: 4,
+      align: "center",
+      children: (
+        <>
+          <Tooltip title={todo.isCompleted ? "Completed" : "Incompleted"}>
+            <IconButton onClick={() => onToggleCompletionClick(todo.id)}>
+              <CheckCircleOutlineIcon
+                sx={{
+                  width: "25px",
+                  height: "25px",
+                  color: todo.isCompleted ? "#328E6E" : "#DBDBDB",
+                }}
+              />
+            </IconButton>
+          </Tooltip>
+        </>
+      ),
+    },
+    // Menu
+    {
+      id: 5,
+      align: "center",
+      children: (
+        <>
+          <Tooltip title="Actions">
+            <IconButton
+              onClick={(event) => setAnchor(event.currentTarget)}
+              variant="text"
+              sx={{ color: "#3D90D7" }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
 
-        <TableCell align="center">
-          <IconButton
-            onClick={() => {
-              onToggleCompletionClick(todo.id);
-            }}
-          >
-            <CheckCircleOutlineIcon
-              sx={{
-                width: "25px",
-                height: "25px",
-                color: todo.isCompleted ? "#328E6E" : "#DBDBDB",
-              }}
-            />
-          </IconButton>
-        </TableCell>
-
-        <TableCell align="center">
-          <IconButton
-            onClick={(event) => setAnchor(event.currentTarget)}
-            variant="text"
-            sx={{ color: "#3D90D7" }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {/* Menu */}
           <Menu
             anchorEl={anchor}
             open={Boolean(anchor)}
             onClose={() => setAnchor(null)}
           >
-            <MenuItem onClick={() => setOpenUpdateDialog(true)}>
-              <EditIcon
-                sx={{
-                  width: "25px",
-                  height: "25px",
-                  color: "#3D90D7",
-                  marginRight: "5px",
-                }}
-              />
-              Edit
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                setOpenDeleteDialog(true);
-              }}
-            >
-              <DeleteIcon
-                sx={{
-                  width: "25px",
-                  height: "25px",
-                  color: "#F7374F",
-                  marginRight: "5px",
-                }}
-              />
-              Delete
-            </MenuItem>
+            {menuItems.map((item) => {
+              return (
+                <MenuItem key={item.id} onClick={item.onClickHandler}>
+                  {item.children}
+                </MenuItem>
+              );
+            })}
           </Menu>
-        </TableCell>
+        </>
+      ),
+    },
+  ];
 
-        <DeleteDialog
-          taskName={todo.name}
-          isOpened={openDeleteDialog}
-          handleDeleteConfirmation={handleDeleteConfirmation}
-        />
-
-        <AddOrUpdateDialog
-          todo={todo}
-          openDialog={openUpdateDialog}
-          closeDialog={() => setOpenUpdateDialog(false)}
-          handleSubmission={onTodoUpdating}
-        />
+  return (
+    <>
+      <TableRow>
+        {cells.map((cell) => {
+          return (
+            <TableCell key={cell.id} align={cell.align}>
+              {cell.children}
+            </TableCell>
+          );
+        })}
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

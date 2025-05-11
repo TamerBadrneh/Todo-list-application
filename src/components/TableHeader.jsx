@@ -1,14 +1,31 @@
 import { TableCell, TableHead, TableRow, TableSortLabel } from "@mui/material";
-import { HEAD_CELLS } from "../constants/HeadCells";
+
+// TODO: is Cleaned => True
 
 export default function TableHeader({ order, orderBy, onSort }) {
+  // headers...
+  const HEAD_CELLS = [
+    {
+      id: "id",
+      label: "Task Number",
+    },
+    {
+      id: "name",
+      label: "Task Name",
+    },
+    {
+      id: "isCompleted",
+      label: "Completed",
+    },
+  ];
+
   return (
     <TableHead>
       <TableRow>
         <TableCell align="center">Details</TableCell>
-        {HEAD_CELLS.map((headCell) => (
+        {HEAD_CELLS.map((headCell, index) => (
           <TableCell
-            key={headCell.id}
+            key={index}
             align="center"
             sortDirection={orderBy === headCell.id ? order : false}
           >

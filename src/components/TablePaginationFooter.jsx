@@ -1,5 +1,7 @@
 import { TablePagination } from "@mui/material";
 
+// TODO: is Cleaned => True
+
 export default function TablePaginationFooter({
   todos,
   rowsPerPage,
