@@ -1,5 +1,4 @@
 import { Container } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import TodoList from "./components/TodoList";
 import Header from "./components/Header";
 

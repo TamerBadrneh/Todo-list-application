@@ -3,8 +3,11 @@ import Chart from "react-apexcharts";
 
 // TODO: is Cleaned => True
 
-export default function PieChartSummary({ completed, inCompleted }) {
-
+export default function PieChartSummary({
+  completed,
+  inCompleted,
+  onTodosFilterChange,
+}) {
   const CHART_OPTIONS = {
     //  The data we will represent is the series...
     series: [
@@ -16,6 +19,12 @@ export default function PieChartSummary({ completed, inCompleted }) {
     options: {
       chart: {
         type: "pie",
+        events: {
+          dataPointSelection: (event, chartContext, config) =>
+            onTodosFilterChange(
+              config.dataPointIndex === 0 ? "completed" : "incompleted"
+            ),
+        },
       },
       labels: ["Completed", "In-Completed"],
       legend: {

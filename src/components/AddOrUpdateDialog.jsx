@@ -18,10 +18,9 @@ export default function AddOrUpdateDialog({
 }) {
   // State:
   const [todoData, setTodoData] = useState({
-    name: todo?.name ?? "",
-    description: todo?.description ?? "",
+    name: todo?.name || "",
+    description: todo?.description || "",
   });
-  
 
   // handlers
   function handleTaskNameChange(event) {
@@ -143,7 +142,7 @@ export default function AddOrUpdateDialog({
             {todo === undefined ? "Add" : "Update"}
           </Button>
         </DialogActions>
-      </Dialog>   
+      </Dialog>
     </>
   );
 }
